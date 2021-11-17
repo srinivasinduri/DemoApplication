@@ -19,25 +19,25 @@
             </div>
             <div class="form-group">
                 <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" readonly/>
+                <input asp-for="Password" class="form-control" readonly />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Image" class="control-label"></label>
                 <input name="userImage" type="file" asp-for="Image" class="form-control-file" />
-                <img src="@Model.Image" width="100" height="50"/>
+                <img src="@Model.Image" width="100" height="50" />
                 <span asp-validation-for="Image" class="text-danger"></span>
             </div>
             @*<div class="form-group">
-                <label asp-for="RegisteredDate" class="control-label"></label>
-                <input asp-for="RegisteredDate" class="form-control" />
-                <span asp-validation-for="RegisteredDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LastLoginDate" class="control-label"></label>
-                <input asp-for="LastLoginDate" class="form-control" />
-                <span asp-validation-for="LastLoginDate" class="text-danger"></span>
-            </div>*@
+            <label asp-for="RegisteredDate" class="control-label"></label>
+            <input asp-for="RegisteredDate" class="form-control" />
+            <span asp-validation-for="RegisteredDate" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="LastLoginDate" class="control-label"></label>
+            <input asp-for="LastLoginDate" class="form-control" />
+            <span asp-validation-for="LastLoginDate" class="text-danger"></span>
+        </div>*@
             <div class="form-group">
                 <label asp-for="EmailId" class="control-label"></label>
                 <input asp-for="EmailId" class="form-control" />

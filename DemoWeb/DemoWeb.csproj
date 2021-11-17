@@ -22,7 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\Account\" />
     <Folder Include="wwwroot\Image\Profile\" />
   </ItemGroup>
 
