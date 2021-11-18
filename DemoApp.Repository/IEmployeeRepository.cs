@@ -9,5 +9,6 @@ namespace DemoApp.Repository
     {
         List<Employee> GetEmployees();
         List<Department> GetDepartments();
+        List<DepartmentVM> GetDepartmentsWithName();
     }
 }

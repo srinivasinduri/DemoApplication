@@ -16,13 +16,34 @@ namespace DemoApp.Repository
 
         public List<Department> GetDepartments()
         {
-            var re = context.Departments.Where(x => x.IsActive).ToList();
+            
+            var re = context.Departments.Select(x => new Department
+            {
+                Name = x.Name,
+                IsActive = x.IsActive
+            }).ToList();
             return re;
+        }
+
+        public List<DepartmentVM> GetDepartmentsWithName()
+        {
+            var alldepts = context.Departments.ToList().GroupBy(x => x.Name).
+                Select(y=>new DepartmentVM
+                { 
+                    PkDeptid=y.First().PkDeptId,
+                    Name=y.First().Name,
+                    count=y.Count()
+                }).ToList();
+            return alldepts;
+            //return context.Departments.ToList().GroupBy(d => d.Name).Select(x => new Department
+            //{
+            //    Name = x.First().Name
+            //}).ToList();
         }
 
         public List<Employee> GetEmployees()
         {
-            return ds.Where(x => x.IsActive).Select(e => new Employee
+            return ds.Select(e => new Employee
             {
                 PkEmpId = e.PkEmpId,
                 Name = e.Name,

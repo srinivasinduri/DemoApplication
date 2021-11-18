@@ -1,7 +1,9 @@
-﻿using DemoApp.Repository;
+﻿using DemoApp.Model;
+using DemoApp.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +14,10 @@ namespace DemoWeb.Controllers
     public class EmployeeController : Controller
     {
         readonly IEmployeeRepository _repository;
-        public EmployeeController(IEmployeeRepository rep)
+        readonly MyDemoDbContext _context;
+        public EmployeeController(IEmployeeRepository rep, MyDemoDbContext context)
         {
+            this._context = context;
             this._repository = rep;
         }
         // GET: EmployeeController
@@ -24,74 +28,136 @@ namespace DemoWeb.Controllers
         }
 
         // GET: EmployeeController/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details()
         {
-            return View();
+            //ViewBag.DeptCount =new SelectList(_repository.GetDepartmentsWithName(), "Name", "count").ToList();
+            var list = _repository.GetDepartmentsWithName();
+            return View(list);
         }
 
         // GET: EmployeeController/Create
         public ActionResult Create()
         {
-            ViewBag.Departments = new SelectList(_repository.GetDepartments(), "PkDeptId", "Name");
-            ViewData["EmpNames"]= new SelectList(_repository.GetEmployees(), "FkDeptId", "Name");
+            ViewBag.Departments = new SelectList(_repository.GetDepartmentsWithName(), "PkDeptid", "Name");
+            ViewBag.EmpNames= new SelectList(_repository.GetEmployees(), "FkDeptId", "Name");
             return View();
         }
 
         // POST: EmployeeController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Employee employee,int deptid)
         {
-            try
+            if (ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+
+                try
+                {
+                    employee.FkDeptId = deptid;
+                    _context.Add(employee);
+                    _context.SaveChanges();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch
+                {
+                    return View();
+                }
             }
-            catch
-            {
-                return View();
-            }
+            return View(employee);
         }
 
         // GET: EmployeeController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var employee = _context.Employees.Find(id);
+            ViewBag.Departments = new SelectList(_repository.GetDepartmentsWithName(), "PkDeptid", "Name",employee.FkDeptId);
+            return View(employee);
         }
 
         // POST: EmployeeController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Employee employee,int fkdeptid)
         {
-            try
+            if (id != employee.PkEmpId)
             {
+                return NotFound();
+            }
+            if (ModelState.IsValid)
+            {
+
+                try
+                {
+                    var emp = _context.Employees.AsNoTracking().FirstOrDefault(x => x.PkEmpId == employee.PkEmpId);
+                    emp.Name = employee.Name;
+                    emp.Designation = employee.Designation;
+                    emp.IsActive = employee.IsActive;
+                    emp.FkDeptId = fkdeptid;
+                    _context.Update(emp);
+                    _context.SaveChanges();
+                }
+                catch(DbUpdateConcurrencyException)
+                {
+                    if (!EmployeeExists(employee.PkEmpId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                    return View();
+                }
                 return RedirectToAction(nameof(Index));
+
             }
-            catch
-            {
-                return View();
-            }
+            return View(employee);
         }
 
         // GET: EmployeeController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var emp = _context.Employees.FirstOrDefault(e=>e.PkEmpId==id);
+            if (emp == null)
+            {
+                return NotFound();
+            }
+            return View(emp);
         }
 
         // POST: EmployeeController/Delete/5
-        [HttpPost]
+        [HttpPost,ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult DeleteConfirmed(int id)
         {
+            if (id == null)
+            {
+                return NotFound();
+            }
             try
             {
+                var employee = _context.Employees.Find(id);
+                _context.Remove(employee);
+                _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
                 return View();
             }
+        }
+
+        private bool EmployeeExists(int id)
+        {
+            return _context.Employees.Any(e => e.PkEmpId == id);
         }
     }
 }

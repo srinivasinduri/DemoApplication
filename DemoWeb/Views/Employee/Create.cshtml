@@ -3,9 +3,7 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
-
-<h4>Employee</h4>
+<h4>Create Employee</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -21,18 +19,24 @@
                 <input asp-for="Designation" class="form-control" />
                 <span asp-validation-for="Designation" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label>Departments</label>
-                <select asp-for="FkDeptId" class="form-control depts" asp-items="@ViewBag.Departments">
+            <div>
+                <label>Department</label>
+                <select name="deptid" class="form-control" asp-items="@ViewBag.Departments">
+
                 </select>
             </div>
-            <div class="form-group">
+            @*<div class="form-group">
                 <label>Employees</label>
+                <select asp-for="FkDeptId" class="form-control depts" asp-items="@ViewBag.EmpNames">
+                </select>
+            </div>*@
+            @*<div class="form-group">
+                <label>Department</label>
                 <select id="emp_names" class="form-control">
                     <option>Please choose from above</option>
                 </select>
                 
-            </div>
+            </div>*@
             <div class="form-group form-check">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="IsActive" /> @Html.DisplayNameFor(model => model.IsActive)
@@ -55,9 +59,10 @@
 
 
     $("select.depts").change(function () {
+        debugger;
         var selecteddept = $(this).children("option:selected").val();
         //alert("You have selected the country - " + selecteddept);
-         var _empNames = JSON.parse('@Html.Raw(Json.Serialize(ViewData["EmpNames"]))');
+         var _empNames = JSON.parse('@Html.Raw(Json.Serialize(ViewBag.Departments))');
         //console.log(_myNames);
         var vals = [];
         vals = _empNames;

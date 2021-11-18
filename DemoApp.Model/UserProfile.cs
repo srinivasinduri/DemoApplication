@@ -16,5 +16,7 @@ namespace DemoApp.Model
         public DateTime? LastLoginDate { get; set; }
         public string EmailId { get; set; }
         public bool IsActive { get; set; }
+        public Role Role { get; set; }
+        public int FkRoleId { get; set; }
     }
 }
