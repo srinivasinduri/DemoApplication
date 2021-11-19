@@ -4,14 +4,16 @@ using DemoApp.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DemoApp.Model.Migrations
 {
     [DbContext(typeof(MyDemoDbContext))]
-    partial class MyDemoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211119050844_Added_role")]
+    partial class Added_role
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -91,9 +93,6 @@ namespace DemoApp.Model.Migrations
                     b.Property<string>("EmailId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("FkRoleId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
 
@@ -114,8 +113,6 @@ namespace DemoApp.Model.Migrations
 
                     b.HasKey("PkUserId");
 
-                    b.HasIndex("FkRoleId");
-
                     b.ToTable("userProfiles");
                 });
 
@@ -130,25 +127,9 @@ namespace DemoApp.Model.Migrations
                     b.Navigation("Department");
                 });
 
-            modelBuilder.Entity("DemoApp.Model.UserProfile", b =>
-                {
-                    b.HasOne("DemoApp.Model.Role", "Role")
-                        .WithMany("userProfiles")
-                        .HasForeignKey("FkRoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Role");
-                });
-
             modelBuilder.Entity("DemoApp.Model.Department", b =>
                 {
                     b.Navigation("Employee");
-                });
-
-            modelBuilder.Entity("DemoApp.Model.Role", b =>
-                {
-                    b.Navigation("userProfiles");
                 });
 #pragma warning restore 612, 618
         }

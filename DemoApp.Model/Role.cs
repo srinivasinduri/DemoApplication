@@ -10,6 +10,6 @@ namespace DemoApp.Model
         [Key]
         public int PkRoleId { get; set; }
         public string RoleName { get; set; }
-        public ICollection<UserProfile> userProfiles { get; set; }
+        public List<UserProfile> userProfiles { get; set; }
     }
 }

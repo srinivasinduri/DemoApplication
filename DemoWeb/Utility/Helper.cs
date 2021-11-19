@@ -30,6 +30,7 @@ namespace DemoWeb.Utility
         public static string GetPKID(ClaimsPrincipal claims) => claims.FindFirst(x => x.Type == "PKId")?.Value ??"0";
         public static string GetEmailId(ClaimsPrincipal claims) => claims.FindFirst(x => x.Type == ClaimTypes.Email)?.Value;
         public static string GetUserImage(ClaimsPrincipal claims) => claims.FindFirst(x => x.Type == "Image")?.Value??"0";
+        public static string GetCurrentRole(ClaimsPrincipal claims) => claims.FindFirst(x => x.Type == ClaimTypes.Role)?.Value;
         #endregion 
     }
 
@@ -91,5 +92,11 @@ namespace DemoWeb.Utility
                 iterationCount: 10000,//the number of iterations of the pseudo-random function to apply during key derivation process
                 numBytesRequested: 256 / 8);//Desired length of the dervied key
         }
+    }
+
+    public enum Roles
+    {
+        Admin=1,
+        User
     }
 }

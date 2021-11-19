@@ -4,14 +4,16 @@ using DemoApp.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DemoApp.Model.Migrations
 {
     [DbContext(typeof(MyDemoDbContext))]
-    partial class MyDemoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211119051615_Addedrelation_userprofile")]
+    partial class Addedrelation_userprofile
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

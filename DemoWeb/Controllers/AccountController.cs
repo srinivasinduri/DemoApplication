@@ -45,12 +45,14 @@ namespace DemoWeb.Controllers
                         if (PasswordHashSecurity.VerifyPassword(login.Password, user.Password))
                         {
                             login.RememberMe = true;
+                            var rolename = _context.Roles.FirstOrDefault(x => x.PkRoleId == user.FkRoleId).RoleName;
                             List<Claim> claims = new List<Claim>
                             {
                                 new Claim(ClaimTypes.Name,user.UserName),
                                 new Claim(ClaimTypes.Email,user.EmailId),
                                 new Claim("PKId",user.PkUserId.ToString()),
-                                new Claim("Image",user.Image)
+                                new Claim("Image",user.Image),
+                                new Claim(ClaimTypes.Role,rolename)
                             };
                             ClaimsIdentity userIdentity = new ClaimsIdentity(claims, "login");
                             ClaimsPrincipal principal = new ClaimsPrincipal(userIdentity);
@@ -63,9 +65,10 @@ namespace DemoWeb.Controllers
                             string returnURL = TempData["ReturnURL"].ToString();
                             if (!string.IsNullOrEmpty(returnURL))
                                 return Redirect(returnURL);
-                            else if (string.IsNullOrEmpty(returnURL))
+                            else if (rolename.Equals(Roles.Admin.ToString(), StringComparison.OrdinalIgnoreCase))
                                 return RedirectToAction("Index", "UserProfile");
-
+                            else if (rolename.Equals(Roles.User.ToString(), StringComparison.OrdinalIgnoreCase))
+                                return RedirectToAction("Index", "Employee");
                             else
                                 return Unauthorized();
                         }

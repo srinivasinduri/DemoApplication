@@ -1,8 +1,10 @@
 ﻿using DemoApp.Model;
 using DemoApp.Repository;
 using DemoWeb.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -11,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace DemoWeb.Controllers
 {
+    [Authorize(Roles="Admin")]
     public class UserProfileController : Controller
     {
        readonly MyDemoDbContext _context;
@@ -36,13 +39,14 @@ namespace DemoWeb.Controllers
         // GET: UserProfileController/Create
         public ActionResult Create()
         {
+            ViewBag.Roles = new SelectList(_context.Roles.Where(x => x.RoleName != Roles.Admin.ToString()), "PkRoleId", "RoleName");
             return View();
         }
 
         // POST: UserProfileController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(UserProfile userProfile,IFormFile userimage)
+        public ActionResult Create(UserProfile userProfile,IFormFile userimage,int fkroleId)
         {
             
             if (ModelState.IsValid)
@@ -52,6 +56,7 @@ namespace DemoWeb.Controllers
                     userProfile.Image = fileUpload.UploadFile(userimage);
                     userProfile.RegisteredDate = DateTime.Now;
                     userProfile.Password = PasswordHashSecurity.HashPassword(userProfile.Password);
+                    userProfile.FkRoleId = fkroleId;
                     _context.Add(userProfile);
                     _context.SaveChanges();
                     return RedirectToAction(nameof(Index));

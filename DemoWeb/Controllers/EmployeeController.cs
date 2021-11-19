@@ -1,5 +1,6 @@
 ﻿using DemoApp.Model;
 using DemoApp.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -34,7 +35,7 @@ namespace DemoWeb.Controllers
             var list = _repository.GetDepartmentsWithName();
             return View(list);
         }
-
+        [Authorize(Roles ="Admin")]
         // GET: EmployeeController/Create
         public ActionResult Create()
         {
@@ -42,7 +43,7 @@ namespace DemoWeb.Controllers
             ViewBag.EmpNames= new SelectList(_repository.GetEmployees(), "FkDeptId", "Name");
             return View();
         }
-
+        [Authorize(Roles = "Admin")]
         // POST: EmployeeController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -65,7 +66,7 @@ namespace DemoWeb.Controllers
             }
             return View(employee);
         }
-
+        [Authorize(Roles = "Admin")]
         // GET: EmployeeController/Edit/5
         public ActionResult Edit(int id)
         {
@@ -77,7 +78,7 @@ namespace DemoWeb.Controllers
             ViewBag.Departments = new SelectList(_repository.GetDepartmentsWithName(), "PkDeptid", "Name",employee.FkDeptId);
             return View(employee);
         }
-
+        [Authorize(Roles = "Admin")]
         // POST: EmployeeController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -117,7 +118,7 @@ namespace DemoWeb.Controllers
             }
             return View(employee);
         }
-
+        [Authorize(Roles = "Admin")]
         // GET: EmployeeController/Delete/5
         public ActionResult Delete(int id)
         {
@@ -132,7 +133,7 @@ namespace DemoWeb.Controllers
             }
             return View(emp);
         }
-
+        [Authorize(Roles = "Admin")]
         // POST: EmployeeController/Delete/5
         [HttpPost,ActionName("Delete")]
         [ValidateAntiForgeryToken]

@@ -23,7 +23,7 @@ namespace DemoWeb.Utility
         public string UploadFile(IFormFile file)
         {
             //Image save save inside the wwwroot path
-            string uploadFolder = Path.Combine(_rootpath, "Image");
+            string uploadFolder = Path.Combine(_rootpath, "Image/Profile");
             string image = Guid.NewGuid().ToString() + "-" + file.FileName;
 
             string filepath = Path.Combine(uploadFolder, image);
@@ -31,7 +31,7 @@ namespace DemoWeb.Utility
             {
                 file.CopyTo(fileStream);
             }
-            string savedpath = "/Image/" + image;
+            string savedpath = "/Image/Profile/" + image;
             return savedpath;
 
             //Image save Outside the wwwroot path
