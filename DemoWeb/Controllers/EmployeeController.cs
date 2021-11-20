@@ -1,5 +1,6 @@
 ﻿using DemoApp.Model;
 using DemoApp.Repository;
+using DemoWeb.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -24,8 +25,17 @@ namespace DemoWeb.Controllers
         // GET: EmployeeController
         public ActionResult Index()
         {
+
             var res = _repository.GetEmployees();
+            if(Helper.GetCurrentRole(User)==Roles.User.ToString())
+            {
+               var userres= res.Where(x => x.IsActive == true);
+                return View(userres);
+            }
+            else
+            {
             return View(res);
+            }
         }
 
         // GET: EmployeeController/Details/5
